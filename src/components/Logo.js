@@ -5,7 +5,7 @@ import "./Logo.css";
 
 const Logo = () => {
 	return (
-		<div className='ma4 mt0'>
+		<div className='center ma4 mt0'>
 	      <Tilty className="tilty br2 shadow-2" glare scale={1.05} maxGlare={0.5}>
 	        <div className="inner"><img alt='logo' src={brain}/></div>
 	      </Tilty>

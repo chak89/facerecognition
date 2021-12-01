@@ -1,6 +1,6 @@
 .form {
-background-color: gray;
-background-image: linear-gradient(transparent 50%, rgba(255,255,255,.5) 50%);
+width: 50%;
+background-color: darkblue;
 background-size: 50px 50px;
 }
 

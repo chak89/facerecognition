@@ -103,93 +103,33 @@ class App extends Component {
 
 	onSubmit = () => {
 		console.log('click')
+		//Reset face rectangles
+		this.setState({ boundingBox: {} })
+		this.setState({ imgUrl: this.state.input })
 
-		async function DetectFaceExtract() {
+		const credentials = new msRest.ApiKeyCredentials({ inHeader: { 'Ocp-Apim-Subscription-Key': config.REACT_APP_API_KEY } });
+		const client = new Face.FaceClient(credentials, config.REACT_APP_API_ENDPOINT);
+
+		//ES6 IIFE with fat arrow functions
+		const detectFaceExtract = (async () => {
 			console.log("========DETECT FACES========");
 			console.log();
 
-			const image_base_url = "https://mymodernmet.com/wp/wp-content/uploads/2019/09/"
-			// Create a list of images
-			const image_file_names = [
-				"100k-ai-faces-2.png"    // single female with glasses
-				// "detection2.jpg", // (optional: single man)
-			];
-
-			// NOTE await does not work properly in for, forEach, and while loops. Use Array.map and Promise.all instead.
-			await Promise.all(image_file_names.map(async function (image_file_name) {
-				let detected_faces = await client.face.detectWithUrl(image_base_url + image_file_name,
+			try {
+				let detected_faces = await client.face.detectWithUrl(
+					this.state.input,
 					{
 						returnFaceAttributes: ["Accessories", "Age", "Blur", "Emotion", "Exposure", "FacialHair", "Gender", "Glasses", "Hair", "HeadPose", "Makeup", "Noise", "Occlusion", "Smile"],
 						// We specify detection model 1 because we are retrieving attributes.
 						detectionModel: "detection_01"
 					});
-				console.log(detected_faces.length + " face(s) detected from image " + image_file_name + ".");
-				console.log("Face attributes for face(s) in " + image_file_name + ":");
-
-				// Parse and print all attributes of each detected face.
-				detected_faces.forEach(async function (face) {
-					// Get the bounding box of the face
-					console.log("Bounding box:\n  Left: " + face.faceRectangle.left + "\n  Top: " + face.faceRectangle.top + "\n  Width: " + face.faceRectangle.width + "\n  Height: " + face.faceRectangle.height);
-
-					// Get the accessories of the face
-					let accessories = face.faceAttributes.accessories.join();
-					if (0 === accessories.length) {
-						console.log("No accessories detected.");
-					}
-					else {
-						console.log("Accessories: " + accessories);
-					}
-
-					// Get face other attributes
-					console.log("Age: " + face.faceAttributes.age);
-					console.log("Blur: " + face.faceAttributes.blur.blurLevel);
-
-					// Get emotion on the face
-					let emotions = "";
-					let emotion_threshold = 0.0;
-					if (face.faceAttributes.emotion.anger > emotion_threshold) { emotions += "anger, "; }
-					if (face.faceAttributes.emotion.contempt > emotion_threshold) { emotions += "contempt, "; }
-					if (face.faceAttributes.emotion.disgust > emotion_threshold) { emotions += "disgust, "; }
-					if (face.faceAttributes.emotion.fear > emotion_threshold) { emotions += "fear, "; }
-					if (face.faceAttributes.emotion.happiness > emotion_threshold) { emotions += "happiness, "; }
-					if (face.faceAttributes.emotion.neutral > emotion_threshold) { emotions += "neutral, "; }
-					if (face.faceAttributes.emotion.sadness > emotion_threshold) { emotions += "sadness, "; }
-					if (face.faceAttributes.emotion.surprise > emotion_threshold) { emotions += "surprise, "; }
-					if (emotions.length > 0) {
-						console.log("Emotions: " + emotions.slice(0, -2));
-					}
-					else {
-						console.log("No emotions detected.");
-					}
-
-					// Get more face attributes
-					console.log("Exposure: " + face.faceAttributes.exposure.exposureLevel);
-					if (face.faceAttributes.facialHair.moustache + face.faceAttributes.facialHair.beard + face.faceAttributes.facialHair.sideburns > 0) {
-						console.log("FacialHair: Yes");
-					}
-					else {
-						console.log("FacialHair: No");
-					}
-					console.log("Gender: " + face.faceAttributes.gender);
-					console.log("Glasses: " + face.faceAttributes.glasses);
-
-					// Get hair color
-					var color = "";
-					if (face.faceAttributes.hair.hairColor.length === 0) {
-						if (face.faceAttributes.hair.invisible) { color = "Invisible"; } else { color = "Bald"; }
-					}
-					else {
-						color = "Unknown";
-						var highest_confidence = 0.0;
-						face.faceAttributes.hair.hairColor.forEach(function (hair_color) {
-							if (hair_color.confidence > highest_confidence) {
-								highest_confidence = hair_color.confidence;
-								color = hair_color.color;
-							}
-						});
-					}
-			}));
-		}
+				console.log(detected_faces.length + " face(s) detected from image " + this.state.input + ".");
+				console.log("Face attributes for face(s) in " + this.state.input + ":");
+				this.calcFaceLocation(detected_faces)
+			} catch (error) {
+				console.log('error:', error)
+			}
+		})();
 	}
 
 	render() {

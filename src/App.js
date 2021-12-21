@@ -93,12 +93,32 @@ class App extends Component {
 	constructor() {
 		super();
 		this.state = {
-			input: ""
+			input: "",
+			imgUrl: "",
+			boundingBox: {}
 		}
+	}
+
+	calcFaceLocation = (data) => {
+		// faceRectangle attributes
+		// height = How high the face is (pixels)
+		// width = How wide the face is (pixels)
+		// top = The distance of the face from the top of the image (Y axis)
+		// left = The distance of the face from the left of the image (X axis)
+		const azureFaceBox = data;
+		console.log('azureFaceBox:', azureFaceBox)
+		let arrayOfRectangles = []
+
+		const image = document.getElementById('inputimage');
+		const realWidth = Number(image.naturalWidth);
+		const realHeight = Number(image.naturalHeight);
+		const height = Number(image.height)
+		const width = Number(image.width)
 	}
 
 	onInputChange = (event) => {
 		console.log(event.target.value);
+		this.setState({ input: event.target.value })
 	}
 
 	onSubmit = () => {
@@ -137,13 +157,16 @@ class App extends Component {
 			<div className="App">
 				<Particles id="tsparticles"
 					options={particlesOptions} />
-				<Navigation />
+				<TopBar />
 				<Logo />
 				<ImageLinkForm
 					onInputChange={this.onInputChange}
 					onButtonSubmit={this.onSubmit}
 				/>
-				{/*<FaceRecognition />*/}
+				<FaceRecognition
+					imgUrl={this.state.imgUrl}
+					bBox={this.state.boundingBox}
+				/>
 			</div>
 		);
 	}

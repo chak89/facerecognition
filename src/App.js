@@ -114,6 +114,23 @@ class App extends Component {
 		const realHeight = Number(image.naturalHeight);
 		const height = Number(image.height)
 		const width = Number(image.width)
+
+		//Percentage difference
+		let widthDiff = (width - realWidth) / realWidth * 100
+		let heightDiff =(height - realHeight) / realHeight*100
+		let sizeDiff = (100 + widthDiff) / 100
+		
+		azureFaceBox.forEach(e => {
+			const rectangle = {
+				top: e.faceRectangle.top*sizeDiff,
+				left: e.faceRectangle.left*sizeDiff,
+				width: e.faceRectangle.width*sizeDiff,
+				height: e.faceRectangle.height*sizeDiff
+			}
+			arrayOfRectangles.push(rectangle)
+		});
+
+		this.setState({ boundingBox: arrayOfRectangles })
 	}
 
 	onInputChange = (event) => {

@@ -14,7 +14,6 @@ const Face = require("@azure/cognitiveservices-face");
 const { "v4": uuidv4 } = require('uuid');
 
 
-
 //Code for generating particles.
 const particlesOptions = {
 	interactivity: {
@@ -139,7 +138,6 @@ class App extends Component {
 	}
 
 	onSubmit = () => {
-		console.log('click')
 		//Reset face rectangles
 		this.setState({ boundingBox: {} })
 		this.setState({ imgUrl: this.state.input })
@@ -188,6 +186,5 @@ class App extends Component {
 		);
 	}
 }
-
 
 export default App;

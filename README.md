@@ -1,9 +1,20 @@
-# Getting Started with Create React App
+# Face detection using Azure Cogntive Services - Azure Face service
+App in REACT that detects human faces in an image using Azure Face service.
 
+## App - Heroku deployment 
+https://pure-caverns-58294.herokuapp.com/
+
+## Technologies
+* Javascript
+* React
+* Azure Cogntive Services API
+* Heroku
+
+
+# Getting Started with Create React App
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
-
 In the project directory, you can run:
 
 ### `npm start`
